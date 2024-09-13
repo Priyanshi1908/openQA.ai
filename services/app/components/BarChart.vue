@@ -1,43 +1,68 @@
 <template>
     <div>
-        <bar-chart :chart-data="chartData" :options="chartOptions" />
+        <canvas ref="barChartCanvas"></canvas>
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { Bar } from 'vue-chartjs';
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
+<script setup>
+import { ref, onMounted, defineProps } from 'vue';
+import { Chart } from 'chart.js/auto';
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
+// Accept the color as a prop
+const props = defineProps({
+    barColor: {
+        type: String,
+        default: 'black'  
+    }
+});
 
-export default defineComponent({
-    name: 'BarChartC',
-    components: {
-        Bar,
-    },
-    data() {
-        return {
-            chartData: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [
-                    {
-                        label: 'Progress',
-                        backgroundColor: '#6366F1',
-                        data: [12, 19, 3, 5, 2, 3, 7],
+const barChartCanvas = ref(null);
+
+onMounted(() => {
+    const ctx = barChartCanvas.value.getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'Frequency',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: props.barColor, 
+                borderColor: props.barColor,
+                borderWidth: 0
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    ticks: {
+                        display: false
                     },
-                ],
-            },
-            chartOptions: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
+                    grid: {
+                        display: false
                     },
+                    border: {
+                        display: false
+                    }
+                },
+                y: {
+                    ticks: {
+                        display: false
+                    },
+                    grid: {
+                        display: false
+                    },
+                    border: {
+                        display: false
+                    }
                 },
             },
-        };
-    },
+            plugins: {
+                legend: {
+                    display: false
+                },
+            }
+        }
+    });
 });
 </script>

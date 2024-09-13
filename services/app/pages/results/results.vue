@@ -24,49 +24,56 @@
                     </div>
 
 
-                    <div class="flex w-full h-full">
+                    <div class="flex w-full h-full border border-gray-100 rounded-lg shadow-md"
+                        style="background-color: #fbfbfb;">
                         <!-- Left Column (30%) -->
                         <div class="w-1/3 p-4 space-y-4">
                             <!-- Card 1 -->
-                            <div class="bg-purple-100 p-4 rounded-lg shadow-md">
-                                <h3 class="text-lg font-semibold">Total Evaluations Run</h3>
-                                <p class="text-3xl font-bold">23</p>
-                                <p class="text-sm text-green-600">↑ 25% since last week</p>
-                                <div class="mt-2">
-                                    <!-- Replace with actual bar chart or image -->
-                                    <div class="bg-purple-400 h-16 rounded-md"></div>
+                            <div class="bg-purple-100 p-3 rounded-lg shadow-md flex items-center justify-between">
+                                <div class="flex-1">
+                                    <h3 class="text-md font-semibold">Average Accuracy</h3>
+                                    <p class="text-xl font-bold">56%</p>
+                                    <p class="text-xs text-green-600">↓ 5% since last week</p>
+                                </div>
+
+                                <div class="w-1/2 h-full ml-2">
+                                    <BarChartC :barColor="'#8353E2'" />
                                 </div>
                             </div>
 
                             <!-- Card 2 -->
-                            <div class="bg-blue-100 p-4 rounded-lg shadow-md">
-                                <h3 class="text-lg font-semibold">Average Accuracy</h3>
-                                <p class="text-3xl font-bold">56%</p>
-                                <p class="text-sm text-red-600">↓ 5% since last week</p>
-                                <div class="mt-2">
-                                    <!-- Replace with actual bar chart or image -->
-                                    <div class="bg-blue-400 h-16 rounded-md">
-                                        <BarChartC />
-                                    </div>
+                            <div class="bg-blue-100 p-3 rounded-lg shadow-md flex items-center justify-between">
+                                <div class="flex-1">
+                                    <h3 class="text-md font-semibold">Average Accuracy</h3>
+                                    <p class="text-xl font-bold">56%</p>
+                                    <p class="text-xs text-red-600">↓ 5% since last week</p>
+                                </div>
+
+                                <div class="w-1/2 h-full ml-2">
+                                    <BarChartC :barColor="'#4069E5'" />
                                 </div>
                             </div>
+
+
 
                             <!-- Card 3 -->
-                            <div class="bg-red-100 p-4 rounded-lg shadow-md">
-                                <h3 class="text-lg font-semibold">Total Cost Incurred</h3>
-                                <p class="text-3xl font-bold">$ 55</p>
-                                <p class="text-sm text-green-600">↑ 5%</p>
-                                <div class="mt-2">
-                                    <!-- Replace with actual bar chart or image -->
-                                    <div class="bg-red-400 h-16 rounded-md"></div>
+                            <div class="bg-red-100 p-3 rounded-lg shadow-md flex items-center justify-between">
+                                <div class="flex-1">
+                                    <h3 class="text-md font-semibold">Average Accuracy</h3>
+                                    <p class="text-xl font-bold">56%</p>
+                                    <p class="text-xs text-green-600">↓ 5% since last week</p>
+                                </div>
+
+                                <div class="w-1/2 h-full ml-2">
+                                    <BarChartC :barColor="'#E05858'" />
                                 </div>
                             </div>
+
                         </div>
 
-                        <!-- Right Column (70%) -->
                         <div class="w-2/3 p-4">
-                            <!-- uPlot Chart Container -->
-                            <div ref="uPlotContainer" class="w-full h-full bg-white"></div>
+                            <div ref="uPlotContainer" class="w-full h-full bg-white" style="background-color: #fbfbfb;">
+                            </div>
                         </div>
                     </div>
                 </header>
@@ -75,12 +82,24 @@
                         <div
                             class="flex py-2 rounded mr-3 border border-solid bg-black bg-opacity-0 border-zinc-900 text-neutral-300 flex-grow w-52">
                             <img loading="lazy" src="public/search.png" alt="" class="w-5" />
-                            <input v-model="searchQuery" type="text"
-                                placeholder="Search for the configurations or LLms here."
+                            <input v-model="searchQuery" type="text" placeholder="Search by the Config File Names."
                                 class="flex-grow outline-none focus:outline-none focus:shadow-none text-black placeholder-text-2 text-3 w-50" />
                         </div>
+                        <div class="flex items-center text-zinc-900 flex-grow pl-2 ">
+
+
+                            <select v-model="selectedLLM"
+                                class="bg-white border border-solid border-zinc-900 rounded px-2 py-2 w-full md:w-auto">
+                                <option value="">Filter by LLMs</option>
+                                <option v-for="llm in llms" :key="llm" :value="llm">
+                                    {{ llm }}
+                                </option>
+                            </select>
+
+
+                        </div>
                         <div class="flex">
-                            <label for="dateRange" class="text-[#323842] ml-5">Select date range</label>
+                            <label for="dateRange" class="text-[#323842] ">Select date range</label>
                             <div
                                 class="flex items-center mr-2 w-3/4 justify-center pr-2 py-2 bg-white rounded border border-solid border-neutral-300 text-zinc-900">
                                 <Flatpickr v-model="dateRange" :config="flatpickrConfig"
@@ -91,18 +110,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex gap-x-5 items-center text-zinc-900 flex-grow">
-                        <!-- Category Filter -->
-                        <select v-model="selectedCategory"
-                            class="bg-white border border-solid border-zinc-900 rounded px-2 py-2 w-full md:w-auto">
-                            <option value="">Filter by category</option>
-                            <option v-for="category in categories" :key="category" :value="category">
-                                {{ category }}
-                            </option>
-                        </select>
 
-
-                    </div>
                 </div>
 
 
@@ -110,7 +118,7 @@
                     class="flex gap-5 items-start mt-3.5 text-sm leading-6 text-right text-cyan-500 max-md:flex-wrap max-md:max-w-full">
                     <img loading="lazy" src="public/question.png" alt="" class="shrink-0 w-6 aspect-square" />
                     <p class="flex-auto mt-3">
-                        Total <span class="font-bold text-cyan-500">551287</span> configs
+                        Total <span class="font-bold text-cyan-500">14</span> evals in the list
                     </p>
                 </div>
                 <div class="overflow-x-auto">
@@ -118,42 +126,29 @@
                         class="mt-6 w-full text-sm leading-5 rounded border border-gray-100 border-solid bg-black bg-opacity-0">
                         <thead>
                             <tr class="font-semibold text-gray-600 bg-gray-50">
+                                <th class="px-4 py-4 font-bold text-left">Eval ID</th>
                                 <th class="px-4 py-4 font-bold text-left">Config File Name</th>
-                                <th class="px-4 py-4 font-bold text-left">Category</th>
-                                <th class="px-4 py-4 font-bold text-left">Tags</th>
-                                <th class="px-4 py-5 font-bold text-left">Review Status</th>
-                                <th class="px-3.5 py-3.5 font-bold text-left">Date <span
-                                        class="font-bold">Submitted</span></th>
-                                <th class="px-4 py-3.5 font-bold text-left">Last Reviewed</th>
-                                <th class="px-4 py-4 font-bold text-left">Submitted by</th>
-                                <th class="pl-10 py-5 font-bold text-left"># of reviews</th>
-                                <th class="px-8 py-5 font-bold text-center max-md:px-5 truncate">Action</th>
+                                <th class="px-4 py-4 font-bold text-left">LLMs</th>
+                                <th class="px-4 py-4 font-bold text-left">Status</th>
+                                <th class="px-4 py-5 font-bold text-left">Last Accessed</th>
+                                <th class="px-4 py-5 font-bold text-left">Accuracy</th>
+                                <th class="px-4 py-4 font-bold text-left">Cost of running the eval</th>
+                                <th class="px-4 py-4 font-bold text-left">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="config in filteredConfigs" :key="config.configFileName" class="bg-white">
-                                <td class="px-4 py-12 font-bold">{{ config.configFileName }}</td>
-                                <td class="px-4 py-12">{{ config.category }}</td>
-                                <td class="px-4 py-11">
-                                    <div class="flex gap-1 text-xs leading-5 text-blue-500">
-                                        <span v-for="tag in config.tags" :key="tag"
-                                            class="px-2 py-2.5 bg-sky-50 rounded-2xl">{{ tag
-                                            }}</span>
-                                    </div>
+                            <tr v-for="config in filteredConfigs" :key="config.evalID" class="bg-white">
+                                <td class="px-4 py-4 font-bold">{{ config.evalID }}</td>
+                                <td class="px-4 py-4">{{ config.configFileName }}</td>
+                                <td class="px-4 py-4">
+                                    <img :src="config.LLMs" alt="LLMs Image" class="w-10 aspect-square" />
                                 </td>
-                                <td class="px-4 py-12">{{ config.reviewStatus }}</td>
-                                <td class="px-4 py-12">{{ config.dateSubmitted }}</td>
-                                <td class="px-4 py-12">{{ config.lastReviewed }}</td>
-                                <td class="px-4 py-10">
-                                    <div class="flex gap-2">
-                                        <img :src="config.submittedBy.avatarUrl" alt="Avatar"
-                                            class="w-9 aspect-square" />
-                                        <span class="my-auto">{{ config.submittedBy.username }}</span>
-                                    </div>
-                                </td>
-                                <td class="pl-10 py-12">{{ config.numOfReviews }}</td>
-                                <td class="px-8 py-12 text-center text-cyan-500 max-md:px-5">
-                                    <a href="#" class="hover:underline">View/Start Review</a>
+                                <td class="px-4 py-4">{{ config.status }}</td>
+                                <td class="px-4 py-4">{{ config.lastAccessed }}</td>
+                                <td class="px-4 py-4">{{ config.accuracy }}</td>
+                                <td class="px-4 py-4">{{ config.costOfRunningEval }}</td>
+                                <td class="px-4 py-4 text-cyan-500">
+                                    <a href="#" class="hover:underline">{{ config.action }}</a>
                                 </td>
                             </tr>
                         </tbody>
@@ -207,27 +202,25 @@
 
 
 <script lang="ts">
-import BarChartC from '@/components/BarChart.vue'; // Adjust the path as needed
+import BarChartC from '@/components/BarChart.vue'; 
 import ky from 'ky';
 import { defineComponent, computed, ref, onMounted } from 'vue';
 import type { Ref } from 'vue';
 import uPlot from 'uplot';
 import 'uplot/dist/uPlot.min.css';
 import Flatpickr from 'vue-flatpickr-component';
-import 'flatpickr/dist/flatpickr.css'; // Optional: Use a different theme
+import 'flatpickr/dist/flatpickr.css'; 
 
 interface Config {
+    evalID: string;
     configFileName: string;
-    category: string;
-    tags: string[];
-    reviewStatus: string;
-    dateSubmitted: string;
-    lastReviewed: string;
-    submittedBy: {
-        username: string;
-        avatarUrl: string;
-    };
-    numOfReviews: number;
+    LLMs: string;
+    LLMName: string; 
+    status: string;
+    lastAccessed: string;
+    accuracy: string;
+    costOfRunningEval: string;
+    action: string;
 }
 
 export default defineComponent({
@@ -237,16 +230,12 @@ export default defineComponent({
     },
     setup() {
         const configs = ref<Config[]>([]);
-        const categories = ref<string[]>([]);
-        const reviewStatuses = ref<string[]>([]);
-        const selectedFileName = ref('');
-        const fileTypeIcon = ref('');
-        const dateRange = ref(['2019/04/14', '2024/06/14']);
-        const selectedCategory = ref('');
-        const selectedReviewStatus = ref('');
         const searchQuery = ref('');
+        const dateRange = ref(['2019/04/14', '2024/06/14']);
+        const selectedLLM = ref(''); 
+        const llms = ref<string[]>([]); 
         const flatpickrConfig = ref({
-            mode: 'range' as 'range', // Ensure type compatibility
+            mode: 'range' as 'range', 
             dateFormat: 'Y/m/d',
             defaultDate: ['2019/04/14', '2024/06/14'],
         });
@@ -257,64 +246,33 @@ export default defineComponent({
             const start = startDate ? new Date(startDate) : new Date('0000-01-01');
             const end = endDate ? new Date(endDate) : new Date('9999-12-31');
 
-            console.log('Selected Date Range:', start, end);
-
             return configs.value.filter(config => {
-                const matchesCategory = selectedCategory.value ? config.category === selectedCategory.value : true;
-                const matchesReviewStatus = selectedReviewStatus.value ? config.reviewStatus === selectedReviewStatus.value : true;
-                const matchesSearchQuery = config.configFileName.toLowerCase().includes(searchQuery.value.toLowerCase());
-                const submittedDate = new Date(config.dateSubmitted);
-                const matchesDateRange = submittedDate >= start && submittedDate <= end;
+                const matchesLLM = selectedLLM.value ? config.LLMName === selectedLLM.value : true;
+                const matchesSearchQuery = config.configFileName
+                    .toLowerCase()
+                    .includes(searchQuery.value.toLowerCase());
+                const accessedDate = new Date(config.lastAccessed);
+                const matchesDateRange = accessedDate >= start && accessedDate <= end;
 
-                return matchesCategory && matchesReviewStatus && matchesSearchQuery && matchesDateRange;
+                return matchesLLM && matchesSearchQuery && matchesDateRange;
             });
         });
 
         const fetchConfigs = async () => {
             try {
-                const response = await ky.get('/mock-config.json').json<{ configs: Config[] }>();
+                const response = await ky.get('/mock-config2.json').json<{ configs: Config[] }>();
                 configs.value = response.configs;
 
-                const categoriesSet = new Set<string>();
-                const reviewStatusesSet = new Set<string>();
+                const llmSet = new Set<string>();
                 configs.value.forEach(config => {
-                    categoriesSet.add(config.category);
-                    reviewStatusesSet.add(config.reviewStatus);
+                    llmSet.add(config.LLMName); 
                 });
+                llms.value = Array.from(llmSet); 
 
-                categories.value = Array.from(categoriesSet);
-                reviewStatuses.value = Array.from(reviewStatusesSet);
-
-                console.log(categories.value, reviewStatuses.value);
-
+                console.log('Configs fetched successfully:', configs.value);
             } catch (error) {
                 console.error('Failed to fetch configs:', error);
             }
-        };
-
-        const triggerFileInput = () => {
-            const fileInput = document.querySelector<HTMLInputElement>('#fileInput');
-            fileInput?.click();
-        };
-
-        const handleFileUpload = (event: Event) => {
-            const input = event.target as HTMLInputElement;
-            const file = input.files?.[0];
-            if (file) {
-                selectedFileName.value = file.name;
-                fileTypeIcon.value = getFileTypeIcon(file.type);
-                console.log('Selected file:', file);
-            }
-        };
-
-        const getFileTypeIcon = (mimeType: string): string => {
-            const fileIcons: Record<string, string> = {
-                'application/json': '/json_icon.png',
-                'text/csv': '/csv_icon.png',
-                'text/plain': '/txt_icon.png',
-            };
-
-            return fileIcons[mimeType] || '';
         };
 
         const initChart = () => {
@@ -338,10 +296,10 @@ export default defineComponent({
                     height: 300,
                     series: [
                         {},
-                        { label: 'ChatGPT', stroke: 'cyan', paths: uPlot.paths.spline(), },
-                        { label: 'Meta', stroke: 'purple', paths: uPlot.paths.spline(), },
-                        { label: 'Anthropic', stroke: 'blue', paths: uPlot.paths.spline(), },
-                        { label: 'Mistral AI', stroke: 'orange', paths: uPlot.paths.spline(), },
+                        { label: 'ChatGPT', stroke: 'cyan', paths: uPlot.paths?.spline?.() },
+                        { label: 'Meta', stroke: 'purple', paths: uPlot.paths?.spline?.() },
+                        { label: 'Anthropic', stroke: 'blue', paths: uPlot.paths?.spline?.() },
+                        { label: 'Mistral AI', stroke: 'orange', paths: uPlot.paths?.spline?.() },
                     ],
                     scales: {
                         x: { time: false },
@@ -375,20 +333,13 @@ export default defineComponent({
 
         return {
             configs,
-            categories,
-            reviewStatuses,
-            selectedFileName,
-            fileTypeIcon,
-            dateRange,
-            selectedCategory,
-            selectedReviewStatus,
             searchQuery,
+            dateRange,
             flatpickrConfig,
             uPlotContainer,
             filteredConfigs,
-            triggerFileInput,
-            handleFileUpload,
-            getFileTypeIcon,
+            selectedLLM, 
+            llms, 
             initChart,
         };
     },
